@@ -1,13 +1,31 @@
 # compuser-littleG
 
-`compuser-littleG` is a local Windows task-chain agent project focused on a reliable single-agent execution model, backend-first routing, and verifiable desktop automation flows.
+[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](./LICENSE)
+![Platform: Windows](https://img.shields.io/badge/platform-Windows-0078D6)
+![Language: TypeScript](https://img.shields.io/badge/language-TypeScript-3178C6)
+![Scope: Local development](https://img.shields.io/badge/scope-local%20development-2ea44f)
 
-It is designed as a practical agent runtime for complex desktop tasks, with an emphasis on:
+`compuser-littleG` is a Windows-focused single-agent task-chain runtime for practical desktop workflows.
+
+It combines a query engine, capability-first routing, Windows-MCP desktop control, and a local web panel into one repo, with a strong bias toward:
+
+- backend-first execution before GUI automation
+- explicit observe -> act -> verify desktop flows
+- replayable regression coverage instead of vague behavior claims
+- documented support boundaries instead of marketing-style overreach
+
+![compuser-littleG web panel](./docs/assets/web-panel.png)
+
+## Why This Repo Exists
+
+This project is built around a simple idea: a desktop agent should be useful because its behavior is routable, inspectable, and verifiable, not because it makes the broadest possible claims.
+
+The current implementation stays intentionally grounded:
 
 - single-agent execution instead of a multi-agent runtime
-- backend-first routing when a task can avoid GUI automation
-- explicit observe -> act -> verify behavior for desktop actions
-- replayable regression coverage and support-boundary documentation
+- capability-first routing across CLI, backend, and GUI paths
+- local Windows development and endpoint-backed validation
+- release and support wording anchored to checked artifacts and docs
 
 ## What It Includes
 
@@ -29,6 +47,17 @@ Current project direction and support language are defined by the documents belo
 - web-panel boundary: [apps/web-panel/WEB_PANEL_BOUNDARIES.md](./apps/web-panel/WEB_PANEL_BOUNDARIES.md)
 
 The project does not claim a general desktop-agent support surface beyond what is explicitly frozen in those files.
+
+## Product Surface
+
+The current product-facing surface in this repository is a local web panel that can:
+
+- submit local task requests
+- route through the same runtime stack used by the CLI path
+- surface provider and session-control behavior
+- stay aligned with the current documented support envelope
+
+The screenshot above is taken from the repository's current local web-panel work.
 
 ## Quick Start
 
@@ -58,6 +87,15 @@ npm run test
 ```
 
 For additional project-specific verification commands, use [DEVELOPMENT.md](./DEVELOPMENT.md).
+
+## Key Commands
+
+```powershell
+npm run dev
+npm run web:panel
+npm run test
+npm run phase4:chains
+```
 
 ## Repository Layout
 
