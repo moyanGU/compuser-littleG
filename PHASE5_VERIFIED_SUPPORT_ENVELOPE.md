@@ -137,6 +137,7 @@ The frozen support envelope assumes:
 Current verified environment note:
 - the Phase 4 live-smoke lessons file records the earlier stabilization close
 - the current published Phase 5 scorecard extends that evidence to `20` full suite runs / `100` total verified passes on the same Windows environment and the same local Windows-MCP endpoint
+- the current published scorecard refresh was executed with `--per-run-timeout-ms 600000`, `--restart-windows-mcp-on-failure`, and `--desktop-reset-between-runs` so long-run desktop drift and transient live-smoke hangs are absorbed at the runner-control layer instead of being silently ignored
 - the currently published artifact still points at `http://127.0.0.1:8010/mcp`; if runtime defaults later move again, product wording must not silently move with them until a new artifact is published
 
 ## 6. Product Publication Defaults

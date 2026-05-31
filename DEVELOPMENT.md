@@ -134,7 +134,7 @@ npm run phase5:scorecard -- --runs 3 --cooldown-ms 5000 --max-total-minutes 20 -
 Refresh the full conservative claim gate sample:
 
 ```powershell
-npm run phase5:scorecard -- --runs 20 --cooldown-ms 8000 --max-total-minutes 90 --endpoint http://127.0.0.1:8010/mcp --permission-mode auto --json-out E:\compuser\compuser\artifacts\scorecard\phase5-latest.json
+npm run phase5:scorecard -- --runs 20 --cooldown-ms 1000 --max-total-minutes 90 --per-run-timeout-ms 600000 --restart-windows-mcp-on-failure --desktop-reset-between-runs --endpoint http://127.0.0.1:8010/mcp --permission-mode auto --json-out E:\compuser\compuser\artifacts\scorecard\phase5-latest.json
 ```
 
 Run the release-facing product smoke:
@@ -274,13 +274,13 @@ Release note:
 2. `npm run web:panel:shell-smoke`
 3. `npm run product:smoke`
 4. `npm run web:panel:provider-smoke`
-5. `npm run phase5:scorecard -- --runs 1 --cooldown-ms 1000 --max-total-minutes 5 --endpoint http://127.0.0.1:8010/mcp --permission-mode auto --json-out E:\compuser\compuser\artifacts\scorecard\phase5-latest.json`
+5. `npm run phase5:scorecard -- --runs 20 --cooldown-ms 1000 --max-total-minutes 90 --per-run-timeout-ms 600000 --restart-windows-mcp-on-failure --desktop-reset-between-runs --endpoint http://127.0.0.1:8010/mcp --permission-mode auto --json-out E:\compuser\compuser\artifacts\scorecard\phase5-latest.json`
    Verification: confirm the generated artifact endpoint matches the endpoint you intend to claim publicly
 6. Confirm the product panel recommended templates still come only from the verified support matrix
 7. Confirm public support wording still matches [PHASE5_VERIFIED_SUPPORT_ENVELOPE.md](/E:/compuser/compuser/PHASE5_VERIFIED_SUPPORT_ENVELOPE.md)
 
 Current delivery-note reference:
-- use [真实可用交付说明-2026-05-31.md](/E:/compuser/compuser/docs/真实可用交付说明-2026-05-31.md) when handing off the current "real provider by default" remediation without refreshing the published Phase 5 claim
+- use [真实可用交付说明-2026-05-31.md](/E:/compuser/compuser/docs/真实可用交付说明-2026-05-31.md) when handing off the current "real provider by default" remediation together with the refreshed 2026-05-31 Phase 5 published evidence
 
 ## Phase 1 Benchmark Set
 

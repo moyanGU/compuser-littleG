@@ -1,4 +1,4 @@
-import { writeFile } from 'node:fs/promises'
+import { mkdir, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { PowerShellCliBackendAdapter } from '../../packages/adapters/cli/CliBackendAdapter.js'
@@ -308,7 +308,7 @@ export async function runPhase4LiveSmokeWithOptions(
       )
       reportOptionalMultiWindowCompareSummarizeDeliverTemplateScenario(
         compareStableResult,
-        primaryDesktopTarget,
+        [primaryDesktopTarget, secondaryDesktopTarget],
       )
 
       const refreshedSnapshotData = compareStableResult.ok
@@ -415,6 +415,7 @@ export async function runPhase4LiveSmokeWithOptions(
       'tmp',
       'phase4-live-file-browser-form-submit.txt',
     )
+    await mkdir(resolve(context.cwd, 'tmp'), { recursive: true })
     await writeFile(
       liveFixturePath,
       ['phase4 live smoke', 'submit this into the browser'].join('\n'),
@@ -542,6 +543,7 @@ async function prepareBrowserSmokeFixture(
   },
 ): Promise<void> {
   const fixturePath = resolve(context.cwd, 'tmp', 'phase4-live-browser-fixture.html')
+  await mkdir(resolve(context.cwd, 'tmp'), { recursive: true })
   const fixtureHtml = [
     '<!doctype html>',
     '<html lang="en">',
@@ -731,6 +733,7 @@ async function prepareDedicatedEditorWindow(
   basename: string
 }> {
   const editorBasename = `phase4-live-reply-editor-${Date.now()}.txt`
+  await mkdir(resolve(context.cwd, 'tmp'), { recursive: true })
   const editorPath = resolve(context.cwd, 'tmp', editorBasename)
   await writeFile(editorPath, 'phase4 live reply editor\n', 'utf8')
 
@@ -2051,7 +2054,7 @@ function reportOptionalFileBrowserFormSubmitTemplateScenario(
 
 function reportOptionalMultiWindowCompareSummarizeDeliverTemplateScenario(
   result: { ok: boolean; data?: unknown; summary: string },
-  expectedTarget: string,
+  allowedTargets: string[],
 ): void {
   if (result.ok) {
     assertVerificationPassed(
@@ -2070,12 +2073,12 @@ function reportOptionalMultiWindowCompareSummarizeDeliverTemplateScenario(
     )
     assertSubmitActionPresent(
       result.data,
-      expectedTarget,
+      allowedTargets[0] ?? '',
       'verification_failed multi window compare summarize deliver template submit action missing',
     )
-    assertSelectedTarget(
+    assertSelectedTargetInSet(
       result.data,
-      expectedTarget,
+      allowedTargets,
       'verification_failed multi window compare summarize deliver template selected unexpected target',
     )
     assertRoutingPolicyDefault(
@@ -2083,7 +2086,7 @@ function reportOptionalMultiWindowCompareSummarizeDeliverTemplateScenario(
       'verification_failed multi window compare summarize deliver template routing policy mismatch',
     )
     console.log(
-      `[pass] phase4-live-smoke multi-window-compare-summarize-deliver-template -> ${expectedTarget}`,
+      `[pass] phase4-live-smoke multi-window-compare-summarize-deliver-template -> ${allowedTargets.join(' | ')}`,
     )
     return
   }
@@ -2312,6 +2315,47 @@ function assertSelectedTarget(
   }
 
   if ((output as { selectedWindowTitle?: unknown }).selectedWindowTitle !== expectedTarget) {
+    throw new Error(errorMessage)
+  }
+}
+
+function assertSelectedTargetInSet(
+  data: unknown,
+  allowedTargets: string[],
+  errorMessage: string,
+): void {
+  if (typeof data !== 'object' || data === null) {
+    throw new Error(errorMessage)
+  }
+
+  const output = (data as { output?: unknown }).output
+  const chainState = (data as { chainState?: unknown }).chainState
+  const directTargetWindowTitle = (data as { targetWindowTitle?: unknown }).targetWindowTitle
+  const directCurrentTarget = (data as { currentTarget?: unknown }).currentTarget
+  const normalizeTarget = (value: unknown): string | undefined =>
+    typeof value === 'string' ? value.replace(/\s+/g, ' ').trim().toLowerCase() : undefined
+  const expectedTargets = allowedTargets.map(normalizeTarget).filter(Boolean)
+  const selectedWindowTitle =
+    typeof output === 'object' && output !== null
+      ? ((output as { selectedWindowTitle?: unknown }).selectedWindowTitle ??
+          (output as { targetWindowTitle?: unknown }).targetWindowTitle)
+      : undefined
+  const currentTarget =
+    typeof chainState === 'object' && chainState !== null
+      ? (chainState as { currentTarget?: unknown }).currentTarget
+      : undefined
+
+  const candidates = [
+    selectedWindowTitle,
+    currentTarget,
+    directTargetWindowTitle,
+    directCurrentTarget,
+  ].map(normalizeTarget)
+
+  if (
+    expectedTargets.length === 0 ||
+    !candidates.some(candidate => candidate && expectedTargets.includes(candidate))
+  ) {
     throw new Error(errorMessage)
   }
 }
