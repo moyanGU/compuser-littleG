@@ -35,6 +35,20 @@ The current implementation stays intentionally grounded:
 - a local web panel for task submission under `apps/web-panel`
 - regression and smoke runners under `apps/cli`
 
+## Architecture At A Glance
+
+```mermaid
+flowchart TD
+    A["User Surfaces<br/>apps/web-panel + apps/cli"] --> B["Query Engine<br/>packages/core"]
+    B --> C["Capability Routing<br/>packages/capabilities"]
+    B --> D["Tool Runtime<br/>packages/tools"]
+    D --> E["Permission Policy<br/>packages/security"]
+    C --> F["Workspace / CLI Paths"]
+    C --> G["Windows-MCP Adapter<br/>packages/adapters/windows-mcp"]
+    G --> H["Desktop Observation + Actions"]
+    B --> I["Context + Compact + Memory<br/>packages/harness"]
+```
+
 ## Current Scope
 
 This repository is intentionally centered on a Windows local-development workflow.
