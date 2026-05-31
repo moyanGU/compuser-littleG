@@ -1,0 +1,9 @@
+{
+  "name": "echo-tool-call",
+  "prompt": "请只调用 echo 工具，输入参数 text 为 ping，不要输出最终答案。",
+  "compatibilityMode": "openai",
+  "expected": {
+    "type": "tool_calls",
+    "toolNames": ["echo"]
+  }
+}

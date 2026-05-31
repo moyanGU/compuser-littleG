@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Compuser 任务面板</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='4' width='56' height='56' rx='14' fill='%23111827'/%3E%3Ccircle cx='28' cy='28' r='12' fill='none' stroke='white' stroke-width='4'/%3E%3Cpath d='M28 16c-6.6 0-12 5.4-12 12s5.4 12 12 12c3 0 5.8-1.1 8-3.1v-5.8h-8.7v-4h12.9v12.1h-4v-2.8A17.8 17.8 0 0 1 28 44c-8.8 0-16-7.2-16-16S19.2 12 28 12c5.1 0 9.8 2.4 12.8 6.1l-3.2 2.5A12 12 0 0 0 28 16Z' fill='white'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <div class="panel-shell">
+      <header class="panel-topbar">
+        <div>
+          <p class="eyebrow">Compuser</p>
+          <h1>任务面板</h1>
+        </div>
+        <div class="topbar-actions">
+          <button id="restart-service-button" class="ghost-button" type="button">
+            重启桌面服务
+          </button>
+          <button id="panic-button" class="danger-button" type="button">
+            紧急中止
+          </button>
+        </div>
+      </header>
+
+      <main class="panel-main">
+        <section class="hero-card">
+          <div class="hero-copy">
+            <p class="eyebrow">普通用户入口</p>
+            <h2>先判断能不能做，再开始真正执行</h2>
+            <p id="task-status" class="hero-status">面板正在初始化。</p>
+            <div class="hero-meta">
+              <span id="stage-label" class="status-pill">等待连接</span>
+              <span id="session-meta" class="meta-chip">会话加载中</span>
+              <span id="launch-meta" class="meta-chip">还没有模板执行</span>
+            </div>
+          </div>
+        </section>
+
+        <section id="home-view" class="main-view">
+          <article class="card card-large">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">首页</p>
+                <h3>输入你要办理的任务</h3>
+              </div>
+            </div>
+
+            <label class="input-label" for="task-input">任务内容</label>
+            <div id="task-dropzone" class="task-dropzone">
+              <div>
+                <strong>附件入口</strong>
+                <p>可以点击上传，也可以直接把文件拖到这里。</p>
+              </div>
+              <button id="attach-button" class="ghost-button" type="button">上传文件</button>
+              <input id="attach-input" type="file" multiple hidden />
+            </div>
+            <div id="attachment-list" class="attachment-list">
+              <p class="muted">还没有上传文件。</p>
+            </div>
+            <textarea
+              id="task-input"
+              rows="7"
+              placeholder="例如：把当前浏览器页面里的内容整理后发到本地 Codex；或者把工作区文件内容提交到当前网页表单。"
+            ></textarea>
+            <div class="composer-actions">
+              <button id="run-button" class="primary-action" type="button">开始判断</button>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">推荐模板</p>
+                <h3>优先走已验证路径</h3>
+              </div>
+            </div>
+            <div id="recommended-templates" class="stack-list">
+              <p class="muted">推荐模板加载后会显示在这里。</p>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">环境状态</p>
+                <h3>当前桌面服务</h3>
+              </div>
+            </div>
+            <div id="windows-status" class="stack-list">
+              <p class="muted">正在读取 Windows-MCP 状态。</p>
+            </div>
+          </article>
+        </section>
+
+        <section id="decision-view" class="main-view" hidden>
+          <article class="card card-large">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">任务判定</p>
+                <h3 id="decision-title">正在生成判定</h3>
+              </div>
+            </div>
+            <div id="decision-summary" class="hero-text"></div>
+            <div id="decision-reason" class="stack-list"></div>
+            <div id="decision-extra" class="stack-list"></div>
+            <div id="decision-actions" class="action-row"></div>
+          </article>
+        </section>
+
+        <section id="executing-view" class="main-view" hidden>
+          <article class="card card-large">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">执行中</p>
+                <h3 id="executing-title">正在处理任务</h3>
+              </div>
+            </div>
+            <div id="executing-summary" class="stack-list"></div>
+            <div id="pending-template-launch" class="stack-list"></div>
+            <div id="pending-permission" class="stack-list"></div>
+          </article>
+        </section>
+
+        <section id="result-view" class="main-view" hidden>
+          <article class="card card-large">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">结果</p>
+                <h3 id="result-title">任务结果</h3>
+              </div>
+            </div>
+            <div id="result-summary-meta" class="stack-list"></div>
+            <div id="final-output-summary" class="result-summary-shell">
+              <div class="result-summary-panel result-summary-panel-empty">
+                <p class="result-summary-label">摘要</p>
+                <p class="result-summary-lead">这里还没有最终输出。</p>
+              </div>
+            </div>
+            <details id="final-output-details" class="result-details">
+              <summary>展开结果详情</summary>
+              <pre id="final-output" class="output">这里还没有最终输出。</pre>
+            </details>
+          </article>
+        </section>
+
+        <details id="advanced-panel" class="details-panel">
+          <summary>展开细节区</summary>
+          <div class="details-grid">
+            <article class="card">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">摘要</p>
+                  <h3>计划概览</h3>
+                </div>
+              </div>
+              <div id="plan-summary" class="summary-grid">
+                <p class="muted">任务开始后，这里会显示计划摘要。</p>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">路径</p>
+                  <h3>内部路由记录</h3>
+                </div>
+              </div>
+              <div id="route-cards" class="stack-list">
+                <p class="muted">还没有路由记录。</p>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">时间线</p>
+                  <h3>执行过程</h3>
+                </div>
+              </div>
+              <div id="timeline" class="stack-list">
+                <p class="muted">执行开始后，这里会按时间显示进展。</p>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">审批</p>
+                  <h3>权限记录</h3>
+                </div>
+              </div>
+              <div id="permissions" class="stack-list">
+                <p class="muted">还没有权限审批记录。</p>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">验证</p>
+                  <h3>结果核对</h3>
+                </div>
+              </div>
+              <div id="verification" class="stack-list">
+                <p class="muted">还没有验证结果。</p>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">工具结果</p>
+                  <h3>执行输出</h3>
+                </div>
+              </div>
+              <div id="results" class="stack-list">
+                <p class="muted">还没有工具结果。</p>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">稳定性</p>
+                  <h3>Scorecard 摘要</h3>
+                </div>
+              </div>
+              <div id="scorecard-summary" class="stack-list">
+                <p class="muted">还没有 scorecard 摘要。</p>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">边界</p>
+                  <h3>支持范围与规则</h3>
+                </div>
+              </div>
+              <div id="governance-notes" class="stack-list">
+                <p class="muted">还没有支持范围说明。</p>
+              </div>
+              <div id="governance-permissions" class="stack-list top-gap">
+                <p class="muted">还没有默认权限说明。</p>
+              </div>
+            </article>
+          </div>
+        </details>
+      </main>
+    </div>
+  </body>
+</html>

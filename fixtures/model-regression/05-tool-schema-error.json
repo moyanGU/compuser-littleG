@@ -1,0 +1,28 @@
+{
+  "name": "tool-schema-error",
+  "compatibilityMode": "openai",
+  "payload": {
+    "choices": [
+      {
+        "message": {
+          "content": "点击目标位置。",
+          "tool_calls": [
+            {
+              "id": "call_bad_click",
+              "type": "function",
+              "function": {
+                "name": "windows.click",
+                "arguments": "{\"x\":\"bad\",\"y\":240}"
+              }
+            }
+          ]
+        },
+        "finish_reason": "tool_calls"
+      }
+    ]
+  },
+  "expected": {
+    "type": "error",
+    "errorCode": "tool_schema_error"
+  }
+}

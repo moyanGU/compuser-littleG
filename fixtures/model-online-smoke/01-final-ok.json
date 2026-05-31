@@ -1,0 +1,9 @@
+{
+  "name": "final-ok",
+  "prompt": "请直接回复字符串 ONLINE_OK，不要调用任何工具，也不要添加其他内容。",
+  "compatibilityMode": "openai",
+  "expected": {
+    "type": "final",
+    "messageIncludes": "ONLINE_OK"
+  }
+}

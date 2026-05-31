@@ -1,0 +1,18 @@
+{
+  "name": "generic-final-text",
+  "compatibilityMode": "generic",
+  "payload": {
+    "choices": [
+      {
+        "message": {
+          "content": "当前桌面状态正常，没有进一步动作。"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "expected": {
+    "type": "final",
+    "messageIncludes": "当前桌面状态正常"
+  }
+}

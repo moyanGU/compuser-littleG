@@ -1,0 +1,25 @@
+{
+  "name": "ollama-flat-tool-call",
+  "compatibilityMode": "ollama",
+  "payload": {
+    "choices": [
+      {
+        "message": {
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_ollama_1",
+              "name": "windows.click",
+              "arguments": "{\"x\":120,\"y\":240}"
+            }
+          ]
+        },
+        "finish_reason": "tool_calls"
+      }
+    ]
+  },
+  "expected": {
+    "type": "tool_calls",
+    "toolNames": ["windows.click"]
+  }
+}

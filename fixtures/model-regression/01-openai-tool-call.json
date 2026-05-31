@@ -1,0 +1,28 @@
+{
+  "name": "openai-standard-tool-call",
+  "compatibilityMode": "openai",
+  "payload": {
+    "choices": [
+      {
+        "message": {
+          "content": "先获取桌面截图。",
+          "tool_calls": [
+            {
+              "id": "call_1",
+              "type": "function",
+              "function": {
+                "name": "windows.screenshot",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        "finish_reason": "tool_calls"
+      }
+    ]
+  },
+  "expected": {
+    "type": "tool_calls",
+    "toolNames": ["windows.screenshot"]
+  }
+}

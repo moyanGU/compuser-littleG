@@ -1,0 +1,28 @@
+{
+  "name": "openai-encoded-tool-call",
+  "compatibilityMode": "openai",
+  "payload": {
+    "choices": [
+      {
+        "message": {
+          "content": "Use the encoded tool call name returned by the gateway.",
+          "tool_calls": [
+            {
+              "id": "call_encoded_1",
+              "type": "function",
+              "function": {
+                "name": "tool_d2luZG93cy5zY3JlZW5zaG90",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        "finish_reason": "tool_calls"
+      }
+    ]
+  },
+  "expected": {
+    "type": "tool_calls",
+    "toolNames": ["windows.screenshot"]
+  }
+}
