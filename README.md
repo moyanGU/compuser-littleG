@@ -97,6 +97,34 @@ npm run test
 npm run phase4:chains
 ```
 
+## Demo Flow
+
+Use this 4-step local flow to see the repository in action:
+
+1. Install dependencies and build the project.
+
+```powershell
+npm install
+npm run build
+```
+
+2. Run the fastest safety checks before trying interactive paths.
+
+```powershell
+npm run check
+npm run test
+```
+
+3. Start the local web panel.
+
+```powershell
+npm run web:panel
+```
+
+4. Open the panel, submit a local task, and inspect the runtime behavior through the same documented boundaries used by the CLI and verification scripts.
+
+For endpoint-backed or Windows-MCP live validation, use the staged commands in [DEVELOPMENT.md](./DEVELOPMENT.md) instead of treating the web panel alone as proof of the full support surface.
+
 ## Repository Layout
 
 ```text
