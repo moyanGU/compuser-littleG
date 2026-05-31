@@ -1,4 +1,4 @@
-# compuser
+# compuser-littleG
 
 `compuser` is a local Windows task-chain agent project focused on a reliable single-agent execution model, backend-first routing, and verifiable desktop automation flows.
 
@@ -36,5 +36,3 @@ npm run test
 
 - this repository currently uses local documentation as the source of truth for architecture and support claims
 - `memory/`, `artifacts/`, `dist/`, `tmp/`, and `node_modules/` are local/generated paths and are not intended as committed source content
-
-# compuser-littleG
