@@ -47,6 +47,8 @@ npm run check
 npm run test
 ```
 
+The repository also runs the same `check` and `test` path in GitHub Actions on push and pull request events.
+
 For larger or release-facing changes, use the verification matrix in [DEVELOPMENT.md](./DEVELOPMENT.md).
 
 Important guardrails:
